@@ -1,0 +1,54 @@
+@model DetailsViewModel
+@{
+    Model.Fill(Catalog, Context.Request.Query["name"]);
+    var it = Model.Item ?? new Item("tourist-spots", "Place Name", "City", 0, 0, 0, true, "Place description.", "landmark");
+    ViewData["Title"] = it.Name;
+    var banner = new[] { it.Name, "" + it.City + " · " + Catalog.Titles[it.Cat], it.Kw, Images.ItemBg(it) };
+}
+<partial name="_Banner" model="banner" />
+<main>
+  <div class="two">
+    @{ var pic = Images.LocalPic(it); }
+    @if (pic != null) { <img class="big" src="@pic" alt="@it.Name" /> }
+    else { <div class="ph big"><b>@it.Name</b></div> }
+    <div>
+      <h2 style="margin-top:0">@it.Name</h2>
+      <p class="meta">@it.City &nbsp;·&nbsp; @it.Rating &nbsp;·&nbsp; @Catalog.Titles[it.Cat]</p>
+      <p>@it.Desc</p>
+      @{ var pks = Catalog.PackagesOf(it); }
+      <div class="btns" style="margin-top:14px">
+        @foreach (var pk in pks) { <a class="btn" href="/Packages/Details?name=@Uri.EscapeDataString(pk.Name)">@pk.Name</a> }
+        <a class="btn alt" href="/Packages">← Back to Packages</a>
+      </div>
+      @if (pks.Count > 0) { <p class="meta">This place is included in the package@(pks.Count > 1 ? "s" : "") above. Book the package and it becomes part of your trip.</p> }
+    </div>
+  </div>
+
+  @if (Catalog.IsStay(it))
+  {
+    <h2 class="sec">Restaurants in @it.City</h2>
+    @if (Model.Restaurants.Count > 0)
+    {
+      <div class="grid">@foreach (var r in Model.Restaurants) { <partial name="_Card" model="r" /> }</div>
+    }
+    else
+    {
+      <p class="empty">No restaurants listed in @it.City yet.</p>
+    }
+
+    <h2 class="sec">Travel options for @it.City</h2>
+    @if (Model.Travel.Count > 0)
+    {
+      <div class="grid">@foreach (var tr in Model.Travel) { <partial name="_Card" model="tr" /> }</div>
+    }
+    else
+    {
+      <p class="empty">No travel options listed for @it.City yet.</p>
+    }
+  }
+  else if (Model.Related.Count > 0)
+  {
+    <h2 class="sec">More in @it.City</h2>
+    <div class="grid">@foreach (var r in Model.Related) { <partial name="_Card" model="r" /> }</div>
+  }
+</main>

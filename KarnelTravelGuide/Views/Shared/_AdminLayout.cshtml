@@ -1,0 +1,77 @@
+@using KarnelTravelGuide.Models.Data
+@inject ApplicationDbContext Db
+@{
+    var controller = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "Admin");
+    var action = (ViewContext.RouteData.Values["action"]?.ToString() ?? "Index");
+    bool onPackages = controller == "TourPackagesAdmin";
+    bool onDashboard = !onPackages && action == "Dashboard";
+    bool onMessages = !onPackages && action == "Messages";
+    bool onBookings = !onPackages && !onDashboard && !onMessages;
+    int unread = Db.ContactMessages.Count(m => !m.IsRead);
+    int pending = Db.Bookings.Count(b => b.Status == BookingStatus.Pending);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#0a0b0d" />
+  <title>@ViewData["Title"] - Admin - Karnel Travel Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="adminbody">
+<a class="skip" href="#adm-main">Skip to main content</a>
+<input type="checkbox" id="sbt" class="navtoggle" aria-label="Open or close the admin menu" />
+<div class="adm">
+  <aside class="adm-side">
+    <a class="adm-brand" href="/Admin/Dashboard">Karnel <span>Admin Panel</span></a>
+    <nav class="adm-menu" aria-label="Admin">
+      <p class="adm-label">Overview</p>
+      <a href="/Admin/Dashboard" class="@(onDashboard ? "on" : "")" aria-current="@(onDashboard ? "page" : null)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v10H3V3zm10 0h8v6h-8V3zM3 15h8v6H3v-6zm10-4h8v10h-8V11z"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <p class="adm-label">Manage</p>
+      <a href="/Admin" class="@(onBookings ? "on" : "")" aria-current="@(onBookings ? "page" : null)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1h2a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h2V5a1 1 0 0 1 1-1zm1 2v1h4V6h-4zM8 11h8v2H8v-2zm0 4h6v2H8v-2z"/></svg>
+        <span>Booking Requests</span>@if (pending > 0) { <em aria-label="@pending pending">@pending</em> }
+      </a>
+      <a href="/Admin/Messages" class="@(onMessages ? "on" : "")" aria-current="@(onMessages ? "page" : null)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H8l-4 4V5a1 1 0 0 1 1-1z"/></svg>
+        <span>Messages</span>@if (unread > 0) { <em aria-label="@unread unread">@unread</em> }
+      </a>
+      <a href="/TourPackagesAdmin" class="@(onPackages ? "on" : "")" aria-current="@(onPackages ? "page" : null)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5zm0 11L4.5 9.3V17L12 21l7.5-4V9.3L12 13z"/></svg>
+        <span>Tour Packages</span>
+      </a>
+      <p class="adm-label">Site</p>
+      <a href="/?site=1" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3a15 15 0 0 0-1.2-5A8 8 0 0 1 18.9 11zM12 4c.8 1 1.6 3 1.9 7h-3.8c.3-4 1.1-6 1.9-7zM4.1 13h3a15 15 0 0 0 1.2 5A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5 15 15 0 0 0-1.2 5zm4.9 9c-.8-1-1.6-3-1.9-7h3.8c-.3 4-1.1 6-1.9 7zm2.7-2a15 15 0 0 0 1.2-5h3a8 8 0 0 1-4.2 5z"/></svg>
+        <span>View Website <span class="sr-only">(opens in a new tab)</span></span>
+      </a>
+    </nav>
+    <form method="post" asp-controller="Account" asp-action="Logout" class="adm-out">
+      <button type="submit">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3H5a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h5v-2H6V5h4V3zm5.6 4.6L14.2 9l2 2H9v2h7.2l-2 2 1.4 1.4L20 12l-4.4-4.4z"/></svg>
+        <span>Logout</span>
+      </button>
+    </form>
+  </aside>
+  <label for="sbt" class="adm-shade"><span class="sr-only">Close menu</span></label>
+
+  <div class="adm-content">
+    <div class="adm-top">
+      <label for="sbt" class="adm-burger"><span class="sr-only">Menu</span><i></i><i></i><i></i></label>
+      <b>@ViewData["Title"]</b>
+    </div>
+    <div id="adm-main" tabindex="-1">
+    @RenderBody()
+    </div>
+  </div>
+</div>
+</body>
+</html>

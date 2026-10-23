@@ -1,0 +1,28 @@
+@model Booking
+<div class="bk @Model.Status.Css()">
+  <div class="bkhead"><b>@Model.Title</b><span class="pill @Model.Status.Css()">@Model.Status.Label()</span></div>
+  @switch (Model.Status)
+  {
+    case BookingStatus.Confirmed:
+      <p class="bkmsg"><b>Your tour is booked!</b> Your booking is confirmed for <b>@Pk.Day(Model.TravelDate)</b>.</p>
+      break;
+    case BookingStatus.Rejected:
+      <p class="bkmsg">Sorry, we could not confirm this request. Please <a href="/Contact"><u>contact us</u></a> or <a href="/Book"><u>send a new request</u></a>.</p>
+      break;
+    default:
+      <p class="bkmsg">Your request is awaiting review by our team. We will update the status soon.</p>
+      break;
+  }
+  <dl class="bkdl">
+    <div><dt>Reference</dt><dd>@Model.Id</dd></div>
+    <div><dt>Travel Date</dt><dd>@Pk.Day(Model.TravelDate)</dd></div>
+    <div><dt>Travelers</dt><dd>@Model.People</dd></div>
+    <div><dt>@(Model.Location == null ? "Type" : "Type / Location")</dt><dd>@Model.Kind@(Model.Location == null ? "" : " - " + Model.Location)</dd></div>
+    @if (!string.IsNullOrWhiteSpace(Model.Included)) { <div><dt>Included</dt><dd class="pre">@Model.Included</dd></div> }
+    else if (!string.IsNullOrEmpty(Model.Hotel) && !string.IsNullOrEmpty(Model.Destination)) { <div><dt>Hotel / Resort</dt><dd>@Model.Hotel - @Model.HotelLocation</dd></div> }
+    <div><dt>Requested On</dt><dd>@Pk.Stamp(Model.CreatedAtUtc)</dd></div>
+    @if (Model.HotelPrice.HasValue && !string.IsNullOrEmpty(Model.Destination)) { <div><dt>Hotel Price</dt><dd>From PKR @Model.HotelPrice.Value.ToString("N0") per night</dd></div> }
+    @if (Model.FromPrice.HasValue) { <div><dt>Price</dt><dd>From PKR @Model.FromPrice.Value.ToString("N0")</dd></div> }
+  </dl>
+  @if (!string.IsNullOrWhiteSpace(Model.AdminNote)) { <div class="bknote"><b>Note from Karnel Travel Guide:</b> @Model.AdminNote</div> }
+</div>

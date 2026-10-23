@@ -1,0 +1,11 @@
+@* Model: [0] title, [1] subtitle, [2] photo keyword, [3] (optional) CSS background-image value, or "none" for a plain dark banner *@
+@model string[]
+@{
+    var custom = Model.Length > 3 ? Model[3] : null;
+    var bg = custom == "none" ? "url('/images/site/packages-hero.png')"
+           : !string.IsNullOrEmpty(custom) ? custom
+           : Images.Bg(Model[2], Model[0].Length * 11, 1600, 500);
+}
+<section class="banner" style="background-image:@Html.Raw(bg)">
+  <h1>@Model[0]</h1><p>@Model[1]</p>
+</section>

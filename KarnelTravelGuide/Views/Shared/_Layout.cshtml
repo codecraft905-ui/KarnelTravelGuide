@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a0b0d" />
+  <title>@ViewData["Title"] - Karnel Travel Guide</title>
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  @await RenderSectionAsync("Head", required: false)
+</head>
+<body class="site">
+<a class="skip" href="#content">Skip to main content</a>
+@{ var path = Context.Request.Path; }
+<header class="nav" id="siteNav">
+  <a class="logo" href="/" aria-label="Karnel Travel Guide - home">Karnel <span>Travel Guide</span></a>
+  <input type="checkbox" id="nt" class="navtoggle" aria-label="Open or close the menu" />
+  <label for="nt" class="burger"><span class="sr-only">Menu</span><i></i><i></i><i></i></label>
+  <nav aria-label="Main">
+    @for (int ix = 0; ix < Nav.Menu.Length; ix++)
+    {
+      var item = Nav.Menu[ix];
+      bool active = item.Url == "/"
+          ? path == "/"
+          : path.StartsWithSegments(item.Url, StringComparison.OrdinalIgnoreCase)
+            || item.Links.Any(l => { var bp = l.Url.Split('?', '#')[0]; return bp != "/" && path.StartsWithSegments(bp, StringComparison.OrdinalIgnoreCase); });
+      <div class="dd@(item.Links.Length > 0 ? " has" : "")">
+        <a href="@item.Url" class="@(active ? "on" : null)" aria-current="@(active ? "page" : null)">@item.Label</a>
+        @if (item.Links.Length > 0)
+        {
+          <div class="mega @(item.Links.Length > 8 ? "c3" : item.Links.Length > 4 ? "c2" : "c1") @(ix >= 2 ? "r" : "")">
+            @foreach (var l in item.Links) { <a href="@l.Url">@l.Text</a> }
+          </div>
+        }
+      </div>
+    }
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+      <div class="dd has">
+        <button type="button" class="ddlabel" aria-haspopup="true">@User.Identity.Name</button>
+        <div class="mega c1 r">
+          @if (User.IsInRole("Admin")) { <a href="/Admin">Admin Panel</a> }
+          else { <a href="/MyBooking">My Booking</a> }
+          <form method="post" asp-controller="Account" asp-action="Logout"><button class="linkbtn">Logout</button></form>
+        </div>
+      </div>
+    }
+    <a class="btn book" href="/Book">Book Now</a>
+  </nav>
+</header>
+
+<div id="content" tabindex="-1">
+@RenderBody()
+</div>
+
+    <section class="cta" style="background-image: url('/images/site/footer-adventure.jpg')">
+        <span class="eyebrow">Your journey begins here</span>
+  <h2>Ready for your next <em>adventure?</em></h2>
+  <p>Tell us where you want to go, and we'll take care of the rest.</p>
+  <a class="btn" href="/Book">Plan My Trip</a>
+</section>
+
+<footer class="foot4">
+  <div class="cols">
+    <div>
+      <span class="brandname">Karnel <em>Travel Guide</em></span>
+      <p>Tours, hotels, restaurants, resorts and transport across Pakistan, all in one trusted place.</p>
+      @* Social links: add real profile URLs here when the accounts exist (the old placeholder "#" links were removed). *@
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <a href="/">Home</a><a href="/About">About Us</a><a href="/Book">Book a Tour</a><a href="/MyBooking">My Booking</a><a href="/Contact">Contact Us</a><a href="/Login">Login</a>
+    </div>
+    <div>
+      <h4>Packages</h4>
+      @foreach (var pk in Catalog.Packages) { <a href="/Packages/Details?name=@Uri.EscapeDataString(pk.Name)">@pk.Name</a> }
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>Karachi, Pakistan</p><p><a href="tel:+923000000000">+92-300-0000000</a></p><p><a href="mailto:info@karneltravelguide.com">info@karneltravelguide.com</a></p><p>Mon – Sat, 9:00 AM – 7:00 PM</p>
+    </div>
+  </div>
+  <div class="copy">© 2026 Karnel Travel Guide · All rights reserved</div>
+</footer>
+
+<script src="~/js/site.js" asp-append-version="true" defer></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

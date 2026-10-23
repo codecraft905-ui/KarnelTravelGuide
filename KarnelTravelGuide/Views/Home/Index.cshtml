@@ -1,0 +1,163 @@
+@model HomeViewModel
+@{
+    Model.Fill(Catalog);
+    ViewData["Title"] = "Home";
+    var slides = Model.Slides;
+    int n = slides.Count;
+}
+<main class="full">
+
+<section class="hs" id="hs" aria-roledescription="carousel" aria-label="Featured destinations">
+  <div class="hs-parallax">
+    @for (int i = 0; i < n; i++)
+    {
+      <div class="hs-bg@(i == 0 ? " on" : "")" style="background-image:@Html.Raw(Images.Bg(slides[i].Kw, 10 + i * 7, 1920, 1080))"></div>
+    }
+    <div class="hs-shade"></div>
+  </div>
+
+  <div class="hs-tl">
+    @for (int i = 0; i < n; i++)
+    {
+      <button type="button" class="hs-dot@(i == 0 ? " on" : "")" aria-label="Go to @slides[i].Name"></button>
+    }
+  </div>
+
+  <div class="hs-inner">
+    <div class="hs-copy">
+      <span class="hs-eyebrow">Discover Pakistan</span>
+      <div class="hs-txtwrap" aria-live="off">
+        @for (int i = 0; i < n; i++)
+        {
+          <div class="hs-txt@(i == 0 ? " on" : "")">
+            <h1><span>@slides[i].Name</span></h1>
+            <span class="hs-place">@slides[i].Place</span>
+            <p>@slides[i].Desc</p>
+            <div class="btns">
+              <a class="hs-btn" href="/Search?q=@Uri.EscapeDataString(slides[i].Name)">Explore <span>&rarr;</span></a>
+              <a class="btn alt" href="/Book">Book a Tour</a>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="hs-side">
+      <div class="hs-cards">
+        @for (int i = 0; i < n; i++)
+        {
+          <button type="button" class="hs-card" data-p="@i" style="--p:@i" aria-label="Show @slides[i].Name">
+            <img src="@Images.Img(slides[i].Kw, 40 + i * 11, 420, 560)" alt="" />
+            <span class="hs-cname">@slides[i].Place<i aria-hidden="true">@(new string('★', slides[i].Stars) + new string('☆', 5 - slides[i].Stars))</i></span>
+          </button>
+        }
+      </div>
+      <div class="hs-ctrl">
+        <button type="button" id="hsPrev" aria-label="Previous destination"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+        <button type="button" id="hsNext" aria-label="Next destination"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+        <button type="button" id="hsPause" aria-pressed="false" aria-label="Pause slideshow"><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" /></svg></button>
+        <div class="hs-count" aria-hidden="true"><b id="hsCur">01</b> / @n.ToString("00")</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="discover-wrap">
+  <form class="discover" method="get" action="/Search" role="search" aria-label="Find a destination">
+    <h2>Find your next <em>destination</em></h2>
+    <label>What are you looking for?<input name="q" placeholder="e.g. beach, Hunza, heritage" /></label>
+    <label>Category<select name="cat"><option value="">All categories</option>@foreach (var c in Catalog.Titles) { <option value="@c.Key">@c.Value</option> }</select></label>
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+<div class="wrap">
+  <div class="sechead"><div><span class="eyebrow">Explore</span><h2>Explore by <em>Category</em></h2></div></div>
+  <div class="grid five">
+    @foreach (var t in Nav.Tiles)
+    {
+      <a class="tile" href="@t.Href"><img src="@Images.Img(t.Kw, t.Title.Length * 13, 500, 360)" alt="" loading="lazy" /><span>@t.Title</span></a>
+    }
+  </div>
+
+  <div class="sechead"><div><span class="eyebrow">Special Packages &amp; Discounts</span><h2>Featured <em>Tour Packages</em></h2></div><a class="more" href="/Packages">View all packages &rarr;</a></div>
+  <div class="grid three">
+    @foreach (var p in Model.FeaturedPackages) { <partial name="_PackageCard" model="p" /> }
+  </div>
+
+  <div class="sechead"><div><span class="eyebrow">Destination Highlights</span><h2>Top <em>Tourist Spots</em></h2></div></div>
+  <div class="grid">@foreach (var i in Model.TopSpots) { <partial name="_Card" model="i" /> }</div>
+
+  <div class="sechead"><div><span class="eyebrow">Stay</span><h2>Featured <em>Hotels &amp; Resorts</em></h2></div></div>
+  <div class="grid">@foreach (var i in Model.FeaturedStays) { <partial name="_Card" model="i" /> }</div>
+
+  <div class="sechead"><div><span class="eyebrow">Dine</span><h2>Where to <em>Eat</em></h2></div></div>
+  <div class="grid">@foreach (var i in Model.Restaurants) { <partial name="_Card" model="i" /> }</div>
+
+  <div class="sechead"><div><span class="eyebrow">Getting around</span><h2>Travel &amp; <em>Transport</em></h2></div></div>
+  <div class="grid">@foreach (var i in Model.Transport) { <partial name="_Card" model="i" /> }</div>
+</div>
+
+@* NOTE FOR THE OWNER: the four figures below were already on the site before the redesign. Please confirm they are accurate before publishing. *@
+<section class="stats-wrap" style="margin-top:var(--sp-5)">
+  <div class="wrap">
+    <div class="stats">
+      @foreach (var s in new[] { ("15,000+", "Happy Travellers"), ("120+", "Destinations"), ("80+", "Partner Hotels"), ("24/7", "Customer Support") })
+      {
+        <div><b>@s.Item1</b><span>@s.Item2</span></div>
+      }
+    </div>
+  </div>
+</section>
+
+<div class="wrap why">
+  <div class="sechead"><div><span class="eyebrow">The Karnel difference</span><h2>Why Travel with <em>Karnel?</em></h2></div></div>
+  <div class="grid four">
+    @foreach (var w in new[] { ("Best Prices", "Fair rates and regular discounts", "money,savings"), ("Trusted Guides", "Local experts who know every route", "tourguide"), ("Safe Travel", "Verified drivers and hotels", "roadtrip"), ("Easy Booking", "Book in a minute with Book Now", "smartphone,travel") })
+    {
+      <div class="card"><div class="imgw"><img src="@Images.Img(w.Item3, w.Item1.Length * 29, 500, 340)" alt="" loading="lazy" /></div><div class="cb"><h3>@w.Item1</h3><p>@w.Item2</p></div></div>
+    }
+  </div>
+</div>
+
+@* NOTE FOR THE OWNER: these testimonials were already on the site. Please confirm they are genuine customer reviews (and that you have permission to show them) before publishing. *@
+<div class="wrap">
+  <div class="sechead"><div><span class="eyebrow">Testimonials</span><h2>Happy <em>Travellers</em></h2></div></div>
+  @{
+    var tms = new[] {
+      ("Jannat", "Lahore Heritage Tour", "Our Lahore heritage tour with friends was unforgettable. The guide was excellent, the food was wonderful and the whole trip was completely stress-free.", "girl,portrait", 0),
+      ("Sohana", "Karachi Beach Weekend", "I booked a beach weekend for my family. The pickup was smooth, the hotel was lovely and the kids loved Clifton and Kund Malir.", "girl,portrait", 1),
+      ("Ghania", "Summer Northern Tour", "From the first call to the last day, everything was well organised. The mountain views were breathtaking and the team looked after us at every step.", "girl,portrait", 2),
+      ("Munazza", "Family Beach Package", "A perfect family getaway. The resort was clean, the staff were friendly and the price was exactly what we were promised.", "girl,portrait", 3),
+      ("Munneba", "Early Bird Booking", "I saved a lot by booking early, and the trip was even better than I expected. I would happily book with Karnel again.", "girl,portrait", 4),
+      ("Ali", "Northern Areas - 7 Days", "Hunza was a dream. The hotel, the food and the transport were all arranged perfectly, so we only had to enjoy the trip.", "man,portrait", 0)
+    };
+  }
+  <section class="tsl" id="tsl" aria-roledescription="carousel" aria-label="Traveller reviews">
+    <button type="button" class="tsl-nav prev" aria-label="Previous review">&#8249;</button>
+    <div class="tsl-track">
+      @for (int ti = 0; ti < tms.Length; ti++)
+      {
+        var t = tms[ti];
+        <figure class="tsl-slide@(ti == 0 ? " on" : "")">
+          <img class="tsl-av" src="@Images.Img(t.Item4, t.Item5, 300, 300)" alt="" loading="lazy" />
+          <div class="tsl-stars" role="img" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>&ldquo;@t.Item3&rdquo;</blockquote>
+          <figcaption><b>@t.Item1</b><span>@t.Item2</span></figcaption>
+        </figure>
+      }
+    </div>
+    <button type="button" class="tsl-nav next" aria-label="Next review">&#8250;</button>
+    <div class="tsl-dots">@for (int ti = 0; ti < tms.Length; ti++) { <button type="button" class="tsl-dot@(ti == 0 ? " on" : "")" aria-label="Review @(ti + 1)"></button> }</div>
+  </section>
+
+  <div class="sechead"><div><span class="eyebrow">Gallery</span><h2>Photo <em>Gallery</em></h2></div></div>
+  <div class="gallery">
+    @foreach (var k in new[] { "mountains", "beach", "lake", "mosque", "valley", "fort", "food", "train", "resort", "river", "sunset", "cabana", "waterfall", "desert", "snow", "bazaar" })
+    {
+      <img src="@Images.Img(k, k.Length * 31, 500, 340)" alt="@k" loading="lazy" />
+    }
+  </div>
+</div>
+
+</main>

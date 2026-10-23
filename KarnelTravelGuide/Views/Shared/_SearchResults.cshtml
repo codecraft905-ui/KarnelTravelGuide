@@ -1,0 +1,31 @@
+@model SearchViewModel
+@{
+    var h = Model.Highlight;
+    var rest = Model.Results.Where(i => i != h).ToList();
+    var pic = h != null ? Images.LocalPic(h) : null;
+}
+@if (h != null)
+{
+  <section class="sfeat">
+    <div class="sfeat-img">
+      @if (pic != null) { <img src="@pic" alt="@h.Name" /> }
+      else { <div class="ph"><b>@h.Name</b></div> }
+    </div>
+    <div class="sfeat-body">
+      <span class="sfeat-tag">Best match &middot; @Catalog.Titles[h.Cat]</span>
+      <h2>@h.Name</h2>
+      <p class="meta">@h.City &nbsp;&middot;&nbsp; Rating @h.Rating</p>
+      <p>@h.Desc</p>
+      <div class="btns">
+        @foreach (var pk in Catalog.PackagesOf(h).Take(2)) { <a class="btn" href="/Packages/Details?name=@Uri.EscapeDataString(pk.Name)">View Package</a> }
+        <a class="btn alt" href="/Details?name=@Uri.EscapeDataString(h.Name)">Details</a>
+      </div>
+    </div>
+  </section>
+}
+@if (rest.Count > 0)
+{
+  <h2 class="sec">@(h != null ? "More results" : Model.Results.Count() + " result(s)")</h2>
+  <div class="grid compact">@foreach (var i in rest) { <partial name="_Card" model="i" /> }</div>
+}
+@if (!Model.Results.Any()) { <p class="empty">Nothing matched. Try different filters.</p> }

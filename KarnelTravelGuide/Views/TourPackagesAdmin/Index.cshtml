@@ -1,0 +1,38 @@
+@model List<TourPackageDb>
+@{ ViewData["Title"] = "Tour Packages"; }
+<main class="adminmain">
+  <h1>Tour Packages</h1>
+  @if (TempData["Flash"] is string flash) { <div class="okbox">@flash</div> }
+  <p class="meta">These records are stored in the <b>TourPackages</b> table of the database. The package cards shown to visitors on the website still come from <b>CatalogData.cs</b>.</p>
+  <div class="btns"><a class="btn" href="/TourPackagesAdmin/Create">+ Add Package</a></div>
+
+  @if (Model.Count == 0)
+  {
+    <p class="empty admin-empty">No tour packages in the database yet. Click "Add Package" to create the first one.</p>
+  }
+  else
+  {
+    <div class="tablewrap" style="margin-top:18px">
+      <table class="atable">
+        <thead><tr><th>#</th><th>Name</th><th>Offer</th><th>Photo Keywords</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+          <tr>
+            <td data-label="#">@p.Id</td>
+            <td data-label="Name"><b>@p.Name</b></td>
+            <td data-label="Offer">@p.Offer</td>
+            <td data-label="Photo Keywords">@p.Kw</td>
+            <td data-label="Actions">
+              <div class="rowbtns">
+                <a class="btn small" href="/TourPackagesAdmin/Edit/@p.Id">Edit</a>
+                <form method="post" asp-controller="TourPackagesAdmin" asp-action="Delete" asp-route-id="@p.Id" onsubmit="return confirm('Delete this package permanently?')"><button class="btn alt small">Delete</button></form>
+              </div>
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>

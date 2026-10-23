@@ -1,0 +1,38 @@
+@model LoginViewModel
+@{ ViewData["Title"] = "Login"; bool justRegistered = ViewBag.JustRegistered == true; }
+<main class="authsplit">
+  <aside class="authvisual" style="background-image:@Html.Raw(Images.Bg("mountains", 7, 1400, 1000))">
+    <h2>Welcome <em>back</em> to your journey.</h2>
+    <p>Log in to continue with your booking and to follow the status of your tour requests.</p>
+  </aside>
+  <section class="authpanel">
+  <div class="formcard loginbox">
+    <h2>Login</h2>
+
+            @if (ViewBag.PasswordReset == true)
+            {
+                <div class="okbox">
+                    <b>Password reset successfully.</b> Please log in with your new password.
+                </div>
+            }
+    <partial name="_AuthSteps" model="2" />
+    @if (justRegistered)
+    {
+      <div class="okbox"><b>Your account is created.</b> Now log in with your email and password to continue.</div>
+    }
+    else if (!string.IsNullOrEmpty(Model.ReturnUrl))
+    {
+      <div class="okbox">Please log in to continue with your booking.</div>
+    }
+    <form method="post" class="form">
+      <label>Email Address<input asp-for="Email" type="email" autocomplete="username" autofocus="@(!justRegistered)" /></label>
+      <label>Password<input asp-for="Password" type="password" autocomplete="current-password" autofocus="@justRegistered" /></label>
+      <input type="hidden" asp-for="ReturnUrl" />
+      <div class="err" role="alert" asp-validation-summary="All"></div>
+      <button>Login</button>
+      <a class="meta" asp-controller="Account" asp-action="ForgotPassword"><u>Forgot password?</u></a>
+    </form>
+    <p class="meta" style="margin-bottom:0">New here? <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl"><b><u>Sign up</u></b></a></p>
+  </div>
+  </section>
+</main>

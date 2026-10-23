@@ -1,0 +1,13 @@
+@model ListingViewModel
+@{ Model.Fill(Catalog, ViewContext.RouteData.Values["cat"]?.ToString(), Context.Request.Query["city"]); ViewData["Title"] = Model.Title; }
+<partial name="_Banner" model='new[]{Model.Title, Model.City == null ? "Available across Pakistan" : "Choose one to see nearby restaurants and travel options", Model.Cat switch {"tourist-spots"=>"landmark,travel","hotels"=>"hotel","restaurants"=>"restaurant","resorts"=>"resort",_=>"transport"}}' />
+<main>
+  @if (Model.Items.Count == 0)
+  {
+    <p class="empty">Nothing found here yet. <a href="/@Model.Cat"><u>See all @Model.Name</u></a>.</p>
+  }
+  else
+  {
+    <div class="grid">@foreach (var i in Model.Items) { <partial name="_Card" model="i" /> }</div>
+  }
+</main>

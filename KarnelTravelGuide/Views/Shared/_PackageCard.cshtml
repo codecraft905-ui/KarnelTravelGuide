@@ -1,0 +1,22 @@
+@* Model: TourPackage. ViewData["light"] = true for the dark offer strip on the Home page *@
+@model TourPackage
+@{
+    var pic = Images.LocalPic(Model);
+    var light = ViewData["light"] is true;
+}
+<div class="card pkg">
+  <div class="imgw">
+    @if (pic != null) { <img src="@pic" alt="@Model.Name" loading="lazy" /> }
+    else { <div class="ph"><b>@Model.Name</b></div> }
+    <span class="cat">Complete Package</span>
+  </div>
+  <div class="cb">
+    <h3>@Model.Name</h3>
+    <p class="disc">@Model.Offer</p>
+    <p class="meta">@Model.Stays.Length stay &middot; @Model.Restaurants.Length restaurants &middot; @Model.Spots.Length spots &middot; @Model.Travel.Length transport <small>included</small></p>
+    <div class="btns">
+      <a class="btn" href="/Packages/Details?name=@Uri.EscapeDataString(Model.Name)">View Package</a>
+      <a class="btn alt" href="/Book?item=@Uri.EscapeDataString(Model.Name)">Book Now</a>
+    </div>
+  </div>
+</div>

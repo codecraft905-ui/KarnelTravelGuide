@@ -1,0 +1,25 @@
+@model MyBookingViewModel
+@{ ViewData["Title"] = "My Booking"; }
+<partial name="_Banner" model='new[]{"My Booking","Check the status of your tour booking requests","ticket,travel"}' />
+<main>
+  <div class="contactgrid">
+    <div>
+      <h2 class="sec" style="margin-top:30px">Your Bookings</h2>
+      @if (Model.Mine.Count == 0)
+      {
+        <div class="listbox"><p>No bookings found in your account yet.</p><p>Booked as a guest earlier? Use the form on the right with your reference number and email address. New here? <a href="/Book"><u>Book a tour</u></a>.</p></div>
+      }
+      @foreach (var b in Model.Mine) { <partial name="_BookingStatus" model="b" /> }
+    </div>
+    <div class="formcard" style="margin-top:30px">
+      <h2>Find My Booking</h2>
+      <p class="meta">Enter the reference number you received after booking and the email address you used.</p>
+      <form method="post" class="form">
+        <label>Booking Reference<input asp-for="Ref" placeholder="KTG-XXXXXX" maxlength="20" required /></label>
+        <label>Email Address<input asp-for="Email" type="email" placeholder="name@example.com" maxlength="150" required /></label>
+        <div class="err" role="alert" asp-validation-summary="All"></div>
+        <button>Check Status</button>
+      </form>
+    </div>
+  </div>
+</main>

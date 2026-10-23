@@ -1,0 +1,106 @@
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<main class="adminmain dashboard-page">
+    <div class="dashboard-heading">
+        <div>
+            <p class="dashboard-eyebrow">KARNEL TRAVEL GUIDE</p>
+            <h1>Admin Dashboard</h1>
+            <p class="dashboard-subtitle">
+                Manage your bookings, customer messages and tour packages.
+            </p>
+        </div>
+        <a href="/?site=1" target="_blank" rel="noopener" class="btn alt">
+            View Website ↗
+        </a>
+    </div>
+
+    <section class="dashboard-stats">
+        <a href="/Admin" class="dashboard-stat stat-bookings">
+            <span class="dashboard-stat-icon">▤</span>
+            <span class="dashboard-stat-label">Total Bookings</span>
+            <strong>@ViewBag.TotalBookings</strong>
+            <small>View all requests →</small>
+        </a>
+
+        <a href="/Admin?status=Pending" class="dashboard-stat stat-pending">
+            <span class="dashboard-stat-icon">◷</span>
+            <span class="dashboard-stat-label">Pending Bookings</span>
+            <strong>@ViewBag.PendingBookings</strong>
+            <small>Review pending requests →</small>
+        </a>
+
+        <a href="/Admin/Messages" class="dashboard-stat stat-messages">
+            <span class="dashboard-stat-icon">✉</span>
+            <span class="dashboard-stat-label">Total Messages</span>
+            <strong>@ViewBag.TotalMessages</strong>
+            <small>@ViewBag.UnreadMessages unread messages →</small>
+        </a>
+
+        <a href="/TourPackagesAdmin" class="dashboard-stat stat-packages">
+            <span class="dashboard-stat-icon">◇</span>
+            <span class="dashboard-stat-label">Tour Packages</span>
+            <strong>@ViewBag.TotalTourPackages</strong>
+            <small>Manage packages →</small>
+        </a>
+    </section>
+
+    <section class="dashboard-actions">
+        <div class="dashboard-section-heading">
+            <div>
+                <h2>Quick Actions</h2>
+                <p>Jump directly to the section you need.</p>
+            </div>
+        </div>
+
+        <div class="dashboard-action-grid">
+            <a href="/Admin" class="dashboard-action">
+                <span class="action-symbol">▤</span>
+                <span>
+                    <strong>Booking Requests</strong>
+                    <small>Review, confirm or reject customer bookings.</small>
+                </span>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a href="/Admin/Messages" class="dashboard-action">
+                <span class="action-symbol">✉</span>
+                <span>
+                    <strong>Customer Messages</strong>
+                    <small>Read inquiries and manage customer feedback.</small>
+                </span>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a href="/TourPackagesAdmin" class="dashboard-action">
+                <span class="action-symbol">◇</span>
+                <span>
+                    <strong>Tour Packages</strong>
+                    <small>Add, edit and delete tour package records.</small>
+                </span>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a href="/?site=1" target="_blank" rel="noopener" class="dashboard-action">
+                <span class="action-symbol">↗</span>
+                <span>
+                    <strong>Visit Public Website</strong>
+                    <small>Preview the customer-facing travel website.</small>
+                </span>
+                <span class="action-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <div class="dashboard-note">
+        <span class="dashboard-note-icon">i</span>
+        <p>
+            <strong>Administrator workspace</strong><br />
+            Booking and message counts are loaded from your database.
+            Tour package counts reflect records saved in the TourPackages table.
+        </p>
+    </div>
+</main>

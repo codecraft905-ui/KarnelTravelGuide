@@ -1,0 +1,16 @@
+@model IReadOnlyList<TourPackage>
+@{
+    ViewData["Title"] = "Packages";
+    var banner = new[] { "Packages", "Complete packages with your stay, meals and places to visit, all included", "", "url('/images/site/packages-hero.png')" };
+}
+<partial name="_Banner" model="banner" />
+<main>
+  <div class="pkgsum">
+    <h2>One Package, Everything Included</h2>
+    <p>Choose a package and your hotel, restaurants and tourist spots are already included. You do not need to choose a hotel, restaurant or tourist spot separately.</p>
+    <div class="steps"><span>1. Choose a package</span><i>→</i><span>2. See what is included</span><i>→</i><span>3. Book Now</span></div>
+  </div>
+  <div class="grid three">
+    @foreach (var p in Catalog.Packages) { <partial name="_PackageCard" model="p" /> }
+  </div>
+</main>

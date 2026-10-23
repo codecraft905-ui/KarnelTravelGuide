@@ -1,0 +1,51 @@
+@model AdminDashboardViewModel
+@{ ViewData["Title"] = "Booking Requests"; }
+<main class="adminmain">
+  <h1>Booking Requests</h1>
+  @if (TempData["Flash"] is string flash) { <div class="okbox">@flash</div> }
+
+  <div class="statgrid">
+    <a class="stat all @(Model.Status == null ? "on" : "")" href="/Admin"><b>@Model.Total</b><span>All Requests</span></a>
+    <a class="stat pending @(Model.Status == "Pending" ? "on" : "")" href="/Admin?status=Pending"><b>@Model.Pending</b><span>Pending</span></a>
+    <a class="stat confirmed @(Model.Status == "Confirmed" ? "on" : "")" href="/Admin?status=Confirmed"><b>@Model.Confirmed</b><span>Confirmed</span></a>
+    <a class="stat rejected @(Model.Status == "Rejected" ? "on" : "")" href="/Admin?status=Rejected"><b>@Model.Rejected</b><span>Rejected</span></a>
+  </div>
+
+  <form method="get" class="filters" style="margin-top:18px">
+    <input name="q" value="@Model.Q" placeholder="Search by reference, name, email, phone, package or hotel" style="min-width:280px" />
+    <select name="status">
+      <option value="">All Statuses</option>
+      @foreach (var s in Enum.GetValues<BookingStatus>()) { <option value="@s" selected="@(Model.Status == s.ToString())">@s</option> }
+    </select>
+    <button>Filter</button><a class="btn alt" href="/Admin">Reset</a>
+  </form>
+
+  @if (Model.Rows.Count == 0)
+  {
+    <p class="empty admin-empty">@(Model.Total == 0 ? "No booking requests yet. New requests will appear here." : "No requests match this filter.")</p>
+  }
+  else
+  {
+    <div class="tablewrap">
+      <table class="atable">
+        <thead><tr><th>Ref</th><th>Received</th><th>Customer</th><th>Package / Service</th><th>Hotel / Resort</th><th>Travel Date</th><th>Travelers</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var b in Model.Rows)
+        {
+          <tr class="@(b.Status == BookingStatus.Pending ? "needs" : "")">
+            <td data-label="Ref"><b>@b.Id</b></td>
+            <td data-label="Received">@Pk.Stamp(b.CreatedAtUtc)</td>
+            <td data-label="Customer">@b.Name<br /><small>@b.Phone<br />@b.Email</small></td>
+            <td data-label="Package">@(string.IsNullOrEmpty(b.Destination) ? "-" : b.Destination)<br /><small>@(string.IsNullOrEmpty(b.Destination) ? "" : b.Kind + (b.Location == null ? "" : " - " + b.Location))</small></td>
+            <td data-label="Hotel / Resort">@(string.IsNullOrEmpty(b.Hotel) ? "-" : b.Hotel)<br /><small>@b.HotelLocation</small></td>
+            <td data-label="Travel Date">@Pk.Day(b.TravelDate)</td>
+            <td data-label="Travelers">@b.People</td>
+            <td data-label="Status"><span class="pill @b.Status.Css()">@b.Status.Label()</span></td>
+            <td data-label="Action"><a class="btn" href="/Admin/Review?id=@Uri.EscapeDataString(b.Id)">@(b.Status == BookingStatus.Pending ? "Review" : "View")</a></td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>

@@ -1,0 +1,19 @@
+@model SearchViewModel
+@{ ViewData["Title"] = "Search"; Model.Fill(Catalog); }
+@{
+    var q = string.IsNullOrWhiteSpace(Model.Q) ? null : Model.Q.Trim();
+    var hpic = Model.Highlight != null ? Images.LocalPic(Model.Highlight) : null;   // picture of the place that was searched
+    var banner = new[] { q == null ? "Search" : "Results for \u201c" + q + "\u201d", q == null ? "Find spots, hotels, restaurants and resorts" : Model.Results.Count() + " place(s) found", "", hpic != null ? $"url({hpic})" : "none" };
+}
+<partial name="_Banner" model="banner" />
+<main>
+  <form method="get" class="filters">
+    <input name="q" value="@Model.Q" placeholder="Name or keyword (e.g. beach, monument)" />
+    <select name="cat"><option value="">All categories</option>@foreach (var c in Catalog.Titles) { <option value="@c.Key" selected="@(Model.Cat == c.Key)">@c.Value</option> }</select>
+    <input name="city" value="@Model.City" placeholder="Location / city" />
+    <input name="maxPrice" type="number" value="@Model.MaxPrice" placeholder="Max price (PKR)" />
+    <label><input type="checkbox" name="avail" value="true" checked="@Model.Avail" /> Available only</label>
+    <button>Search</button><a class="btn alt" href="/AdvancedSearch">Advanced Search →</a>
+  </form>
+  <partial name="_SearchResults" model="Model" />
+</main>

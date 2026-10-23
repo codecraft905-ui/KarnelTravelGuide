@@ -1,0 +1,33 @@
+@model RegisterViewModel
+@{ ViewData["Title"] = "Sign Up"; }
+<main class="authsplit">
+  <aside class="authvisual" style="background-image:@Html.Raw(Images.Bg("hunza", 11, 1400, 1000))">
+    <h2>Begin your <em>journey</em> with Karnel.</h2>
+    <p>Create a free account to book a tour and to track your booking requests. You can browse the website without an account.</p>
+  </aside>
+  <section class="authpanel">
+  <div class="formcard loginbox wide">
+    <h2>Sign Up</h2>
+    <partial name="_AuthSteps" model="1" />
+    @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+    {
+      <div class="okbox">Please <b>sign up</b> to continue with your booking. You can browse the website freely without an account.</div>
+    }
+    <form method="post" class="form">
+      <div class="row2">
+        <label>Full Name<input asp-for="Name" placeholder="Enter your full name" maxlength="100" autocomplete="name" autofocus /></label>
+        <label>Phone Number (optional)<input asp-for="Phone" type="tel" placeholder="03XX-XXXXXXX" maxlength="30" autocomplete="tel" /></label>
+      </div>
+      <label>Email Address<input asp-for="Email" type="email" placeholder="name@example.com" maxlength="150" autocomplete="username" /></label>
+      <div class="row2">
+        <label>Password<input asp-for="Password" type="password" maxlength="100" autocomplete="new-password" /></label>
+        <label>Confirm Password<input asp-for="ConfirmPassword" type="password" maxlength="100" autocomplete="new-password" /></label>
+      </div>
+      <input type="hidden" asp-for="ReturnUrl" />
+      <div class="err" role="alert" asp-validation-summary="All"></div>
+      <button>Create Account</button>
+    </form>
+    <p class="meta" style="margin-bottom:0">Already have an account? <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl"><b><u>Log in</u></b></a> and book directly.</p>
+  </div>
+  </section>
+</main>

@@ -1,0 +1,21 @@
+@{ ViewData["Title"] = "About Us"; }
+<partial name="_Banner" model='new[] { "About Us", "Your trusted partner in travel", "travel,friends", "url(/images/site/about-hero.png)" }' />
+<div class="two">
+    <img class="big" src="@Images.Img("travel,tourists", 301, 900, 600)" alt="About Karnel Travel Guide" />
+    <div><h2 id="story">Who We Are</h2>
+      <p>Karnel Travel Guide is a tours and travel company offering transport between cities and tourist spots, hotel and resort bookings, and complete holiday packages. Customers can browse our services online, view the details and book tours and transport with ease.</p>
+      <p>Our aim is to help every traveller discover the natural beauty and rich heritage of Pakistan in comfort and at an affordable price.</p></div>
+  </div>
+  <h2 class="sec" id="facilities">Our Facilities</h2>
+  <div class="grid three about">
+    @foreach (var f in new[]{ ("Transportation","Buses, trains, flights and private cars across the country.","bus,road"), ("Tour Packages","Ready-made and custom packages at special discounted prices.","tour,group"), ("Accommodation","Hotels and resorts at every major tourist destination.","hotel,room"), ("Food & Dining","Carefully selected restaurants at every destination.","restaurant,food"), ("Tour Guides","Experienced local guides for every trip.","guide,tourist"), ("24/7 Support","Our team is always a call away.","customer,support") }) {
+      <div class="card"><div class="imgw"><img src="@Images.Img(f.Item3, f.Item1.Length * 17, 600, 380)" alt="@f.Item1" loading="lazy" /></div><div class="cb"><h3>@f.Item1</h3><p>@f.Item2</p></div></div>
+    }
+  </div>
+  <h2 class="sec" id="team">Our Team</h2>
+  <div class="grid four about team">
+    @foreach (var m in new[]{("Ali","Director"),("Sohana","Tour Manager"),("Ghania","Transport Head"),("Jannat","Customer Care")}.Select((x, i) => (x.Item1, x.Item2, i))) {
+      <div class="card"><div class="imgw"><img src="@Images.Img(m.i == 0 ? "man,portrait" : "girl,portrait", m.i - 1, 500, 560)" alt="@m.Item1" loading="lazy" /></div><div class="cb"><h3>@m.Item1</h3><p>@m.Item2</p></div></div>
+    }
+  </div>
+</main>

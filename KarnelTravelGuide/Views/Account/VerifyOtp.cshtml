@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Verify Code";
+    string email = ViewBag.Email as string;
+}
+<main class="authsplit">
+  <aside class="authvisual" style="background-image:@Html.Raw(Images.Bg("mountains", 7, 1400, 1000))">
+    <h2>Check your <em>inbox</em>.</h2>
+    <p>The code expires after 5 minutes and works only once.</p>
+  </aside>
+  <section class="authpanel">
+  <div class="formcard loginbox">
+    <h2>Enter Verification Code</h2>
+    <p class="meta">If an account exists for <b>@email</b>, a 6-digit code has been sent to it.</p>
+    @if (ViewBag.Error != null)
+    {
+      <div class="err" role="alert">@ViewBag.Error</div>
+    }
+    <form asp-controller="Account" asp-action="VerifyOtp" method="post" class="form">
+      <input type="hidden" name="email" value="@email" />
+      <label>6-digit code<input class="otp" type="text" name="otp" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus /></label>
+      <button>Verify Code</button>
+    </form>
+    <p class="meta" style="margin-bottom:0">Did not get it? <a asp-controller="Account" asp-action="ForgotPassword"><b><u>Send a new code</u></b></a> &middot; <a asp-controller="Account" asp-action="Login"><b><u>Back to Login</u></b></a></p>
+  </div>
+  </section>
+</main>

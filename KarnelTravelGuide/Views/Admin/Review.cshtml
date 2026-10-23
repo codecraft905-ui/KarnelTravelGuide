@@ -1,0 +1,45 @@
+@model AdminReviewViewModel
+@{ var b = Model.Booking; ViewData["Title"] = "Review " + b.Id; }
+<main class="adminmain">
+  <p><a href="/Admin">← Back to All Requests</a></p>
+  <h1>Review Request <small>@b.Id</small> <span class="pill @b.Status.Css()">@b.Status.Label()</span></h1>
+
+  <div class="reviewgrid">
+    <div class="formcard">
+      <h2>Request Details</h2>
+      <dl class="bkdl big">
+        <div><dt>Package / Service</dt><dd><b>@(string.IsNullOrEmpty(b.Destination) ? "- (hotel only)" : b.Destination)</b></dd></div>
+        <div><dt>Type</dt><dd>@b.Kind@(b.Location == null ? "" : " - " + b.Location)</dd></div>
+        @if (b.FromPrice.HasValue) { <div><dt>Listed Price</dt><dd>From PKR @b.FromPrice.Value.ToString("N0")</dd></div> }
+        @if (!string.IsNullOrWhiteSpace(b.Included)) { <div><dt>Included</dt><dd style="white-space:pre-line">@b.Included</dd></div> }
+        else if (!string.IsNullOrEmpty(b.Hotel)) { <div><dt>Hotel / Resort</dt><dd><b>@b.Hotel</b> - @b.HotelLocation</dd></div> }
+        <div><dt>Travel Date</dt><dd>@Pk.Day(b.TravelDate)</dd></div>
+        <div><dt>Travelers</dt><dd>@b.People</dd></div>
+        <div><dt>Customer</dt><dd>@b.Name</dd></div>
+        <div><dt>Phone</dt><dd><a href="tel:@b.Phone"><u>@b.Phone</u></a></dd></div>
+        <div><dt>Email</dt><dd><a href="mailto:@b.Email"><u>@b.Email</u></a></dd></div>
+        <div><dt>Received</dt><dd>@Pk.Stamp(b.CreatedAtUtc)</dd></div>
+        @if (b.DecidedAtUtc.HasValue) { <div><dt>Last Decision</dt><dd>@Pk.Stamp(b.DecidedAtUtc.Value)</dd></div> }
+      </dl>
+      <h3>Customer Message</h3>
+      <p class="pre">@(string.IsNullOrWhiteSpace(b.Message) ? "- no special requests -" : b.Message)</p>
+    </div>
+
+    <div class="formcard">
+      <h2>Your Decision</h2>
+      <form method="post" class="form">
+        <label>Note for the customer (optional)
+          <textarea asp-for="AdminNote" rows="5" maxlength="500" placeholder="e.g. Pickup at 8:00 AM from your hotel. / Sorry, no seats on this date."></textarea></label>
+        <div class="err" role="alert" asp-validation-summary="All"></div>
+        <p class="meta">This note is shown to the customer on their booking status page.</p>
+        <div class="btns">
+          <button type="submit" class="accept" asp-controller="Admin" asp-action="Accept" asp-route-id="@b.Id">@(b.Status == BookingStatus.Confirmed ? "Save Note (Keep as Confirmed)" : "Accept & Confirm")</button>
+          <button type="submit" class="reject" asp-controller="Admin" asp-action="Reject" asp-route-id="@b.Id" onclick="@(b.Status == BookingStatus.Rejected ? "" : b.Status == BookingStatus.Confirmed ? "return confirm('This booking is already confirmed. Reject it anyway?')" : "return confirm('Reject this booking request?')")">@(b.Status == BookingStatus.Rejected ? "Save Note (Keep as Rejected)" : "Reject")</button>
+        </div>
+      </form>
+      <form method="post" asp-controller="Admin" asp-action="DeleteBooking" asp-route-id="@b.Id" onsubmit="return confirm('Delete this booking permanently?')" style="margin-top:14px">
+        <button type="submit" class="btn alt small">Delete Booking</button>
+      </form>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,21 @@
+@model TourPackageFormViewModel
+@{
+    var isNew = Model.Id == null;
+    ViewData["Title"] = isNew ? "Add Tour Package" : "Edit Tour Package";
+}
+<main class="adminmain">
+  <p><a href="/TourPackagesAdmin">← Back to Tour Packages</a></p>
+  <h1>@ViewData["Title"]</h1>
+  <div class="formcard" style="max-width:640px">
+    <form method="post" class="form" asp-controller="TourPackagesAdmin" asp-action="@(isNew ? "Create" : "Edit")" asp-route-id="@Model.Id">
+      <label>Package Name<input asp-for="Name" maxlength="100" placeholder="e.g. Lahore Heritage Tour" /></label>
+      <label>Offer<input asp-for="Offer" maxlength="100" placeholder="e.g. 10% OFF" /></label>
+      <label>Photo Keywords (comma separated)<input asp-for="Kw" maxlength="100" placeholder="e.g. mosque,fort" /></label>
+      <div class="err" role="alert" asp-validation-summary="All"></div>
+      <div class="btns">
+        <button type="submit">@(isNew ? "Add Package" : "Save Changes")</button>
+        <a class="btn alt" href="/TourPackagesAdmin">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>

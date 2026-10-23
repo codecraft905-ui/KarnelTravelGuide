@@ -1,0 +1,88 @@
+@model ContactViewModel
+@{ ViewData["Title"] = "Contact Us"; bool loggedIn = User.Identity?.IsAuthenticated == true; }
+<partial name="_Banner" model='new[] { "Contact Us", "Ask us a question or share your feedback. To book a tour, please use Book Now.", "", "url(/images/site/contact-hero.png)" }' /><main>
+  <div class="grid" style="margin-top:30px">
+        @foreach (var c in new[]{
+                ("Call Us", "+92-300-0000000", "contact-call.jpg"),
+                ("Email Us", "info@karneltravelguide.com", "contact-email.jpg"),
+                ("Visit Us", "Head Office, Karachi, Pakistan", "contact-office.jpg"),
+                ("Working Hours", "Mon – Sat, 9:00 AM – 7:00 PM", "contact-hours.jfif")
+                })
+        {
+            <div class="card">
+                <div class="imgw">
+                    <img src="/images/site/@c.Item3" alt="@c.Item1" loading="lazy" />
+                </div>
+                <div class="cb">
+                    <h3>@c.Item1</h3>
+                    <p class="desc">@c.Item2</p>
+                </div>
+            </div>
+        }
+  </div>
+
+  <div class="contactgrid" id="form">
+    <div class="formcard">
+      <h2>Send an Inquiry or Feedback</h2>
+      <div class="okbox">Planning a trip? Choose a package and click <a href="/Book"><u>Book Now</u></a>, or send us your question or feedback below.</div>
+      @if (Model.Sent) { <div class="okbox">Thank you! We have received your message and will get back to you shortly.</div> }
+        @if (loggedIn)
+        {
+        <form method="post" class="form" id="contactForm">
+          <div class="row2"><label>Full Name<input asp-for="Name" placeholder="Enter your full name" /></label><label>Email Address<input asp-for="Email" placeholder="name@example.com" /></label></div>
+          <div class="row2"><label>Phone Number<input asp-for="Phone" placeholder="03XX-XXXXXXX" /></label>
+            <label>How can we help you?<select asp-for="Type" id="msgType"><option value="Inquiry">General Inquiry</option><option value="Feedback">Share Feedback</option></select></label></div>
+          <label>Destination or Service
+            <select asp-for="Destination"><option value="">Select a destination (optional)</option>
+              @foreach (var g in Catalog.All.GroupBy(i => i.Cat)) { <optgroup label="@Catalog.Titles[g.Key]">@foreach (var i in g) { <option value="@i.Name" selected="@(Model.Destination == i.Name)">@i.Name - @i.City</option> }</optgroup> }
+            </select></label>
+          <div class="row2"><label>Preferred Travel Date<input asp-for="TravelDate" type="date" /></label><label>Number of Travelers<input asp-for="People" type="number" min="1" /></label></div>
+
+          <label id="fbRating" hidden>Rate Your Experience<select asp-for="Rating">
+              <option value="5">5 - Excellent</option><option value="4">4 - Very Good</option><option value="3">3 - Good</option><option value="2">2 - Fair</option><option value="1">1 - Poor</option></select></label>
+          <label id="msgBox">Your Message<textarea asp-for="Message" rows="5" placeholder="Tell us about your trip, your plans or any questions you have..."></textarea></label>
+          <div class="err" role="alert" asp-validation-summary="All"></div>
+          <button id="sendBtn">Send Message</button>
+        </form>
+        }
+        else
+        {
+        <div class="loginprompt">
+          <h3>Login or Sign Up to Continue</h3>
+          <p>Please log in to your account to send us an inquiry or share your feedback.</p>
+          <div class="btns"><a class="btn" href="/Login?returnUrl=%2FFeedback">Login</a><a class="btn alt" href="/Register?returnUrl=%2FFeedback">Sign Up</a></div>
+        </div>
+        }
+    </div>
+    <div class="side">
+      <img class="big" src="@Images.Img("customerservice,smile", 401, 900, 420)" alt="Support team" loading="lazy" />
+      <div class="listbox"><h3>Why Book with Karnel?</h3>
+        <p>Best Price Guarantee</p><p>Verified Hotels, Drivers and Guides</p><p>Free Changes up to 48 Hours Before Travel</p><p>24/7 Phone and WhatsApp Support</p>
+        <div class="btns"><a class="btn" href="tel:+923000000000">Call Now</a><a class="btn alt" href="https://wa.me/923000000000">WhatsApp</a></div></div>
+      <div class="map"><iframe src="https://www.google.com/maps?q=Karachi+Pakistan&output=embed" loading="lazy" title="Map"></iframe></div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="branches">Our Branches</h2>
+  <div class="grid three">
+    @foreach (var b in new[]{ ("Karachi - Head Office","Shahrah-e-Faisal, Karachi","karachi,city"), ("Lahore Branch","Gulberg, Lahore","lahore,city"), ("Islamabad Branch","Blue Area, Islamabad","islamabad,city") }) {
+      <div class="card"><div class="imgw"><img src="@Images.Img(b.Item3, b.Item1.Length * 43, 600, 360)" alt="@b.Item1" loading="lazy" /></div><div class="cb"><h3>@b.Item1</h3><p class="desc">@b.Item2</p><p>+92-300-0000000</p></div></div>
+    }
+  </div>
+
+  <h2 class="sec" id="faq">Frequently Asked Questions</h2>
+  <div class="faq">
+    @foreach (var f in new[]{
+        ("How do I book a tour?","Open any package and click Book Now. Create a free account, fill in the booking form with your travel date and number of travelers, and submit your request. Our team will then confirm it with you."),
+        ("Can I cancel or change my booking?","Yes. You can change your travel date or cancel free of charge up to 48 hours before departure. Simply contact our team."),
+        ("Which payment methods do you accept?","We accept bank transfers, cash payments at any of our offices and all major online payment options."),
+        ("What is included in a package?","Every package already includes your hotel or resort, selected restaurants, the tourist spots and the transport listed on its page."),
+        ("Are there group discounts?","Yes. Groups of six or more receive special rates. Please mention your group size when you contact us."),
+        ("When is the best time to visit the north?","May to September is ideal for Hunza, Skardu and Fairy Meadows.") }) {
+      <details><summary>@f.Item1</summary><p>@f.Item2</p></details>
+    }
+  </div>
+
+  <h2 class="sec">Photo Gallery</h2>
+  <div class="gallery">@foreach (var k in new[]{"mountains","beach","lake","valley","fort","mosque","resort","waterfall"}) { <img src="@Images.Img(k, k.Length * 41, 500, 340)" alt="@k" loading="lazy" /> }</div>
+</main>

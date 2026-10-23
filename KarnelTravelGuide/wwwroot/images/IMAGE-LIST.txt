@@ -1,0 +1,155 @@
+IMAGE LIST - Karnel Travel Guide
+================================
+Saari photos REAL / realistic hon (cartoon, illustration ya AI-cartoon nahi). Format: .jpg (ya .jpeg/.png/.webp).
+Suggested size: places 1200x800, hero/banner 1920x1080. Naam bilkul neeche likhe hue hon (lower case, dashes).
+Photo add karke browser refresh karo - restart ki zarurat nahi.
+
+
+### A) wwwroot/images/places/   (1 photo = card + details page + banner)
+
+-- Packages (6)
+  northern-areas-7-days.jpg      <- Northern Areas - 7 Days
+  karachi-beach-weekend.jpg      <- Karachi Beach Weekend
+  lahore-heritage-tour.jpg      <- Lahore Heritage Tour
+  summer-northern-tour.jpg      <- Summer Northern Tour
+  family-beach-package.jpg      <- Family Beach Package
+  early-bird-booking.jpg      <- Early Bird Booking
+
+-- Tourist spots (12)
+  hunza-valley.jpg      <- Hunza Valley (Gilgit-Baltistan)
+  clifton-beach.jpg      <- Clifton Beach (Karachi)
+  badshahi-mosque.jpg      <- Badshahi Mosque (Lahore)
+  fairy-meadows.jpg      <- Fairy Meadows (Diamer)
+  mohenjo-daro.jpg      <- Mohenjo-daro (Larkana)
+  lahore-fort.jpg      <- Lahore Fort (Lahore)
+  kund-malir-beach.jpg      <- Kund Malir Beach (Balochistan)
+  neelum-valley.jpg      <- Neelum Valley (Azad Kashmir)
+  faisal-mosque.jpg      <- Faisal Mosque (Islamabad)
+  deosai-national-park.jpg      <- Deosai National Park (Skardu)
+  rohtas-fort.jpg      <- Rohtas Fort (Jhelum)
+  shogran.jpg      <- Shogran (Kaghan)
+
+-- Hotels (12)
+  pearl-continental.jpg      <- Pearl Continental (Karachi)
+  serena-hotel.jpg      <- Serena Hotel (Islamabad)
+  avari-towers.jpg      <- Avari Towers (Lahore)
+  marriott-hotel.jpg      <- Marriott Hotel (Islamabad)
+  movenpick-hotel.jpg      <- Movenpick Hotel (Karachi)
+  regent-plaza.jpg      <- Regent Plaza (Karachi)
+  pearl-continental-lahore.jpg      <- Pearl Continental Lahore (Lahore)
+  ramada-hotel.jpg      <- Ramada Hotel (Islamabad)
+  margalla-view-hotel.jpg      <- Margalla View Hotel (Islamabad)
+  seaview-residency.jpg      <- Seaview Residency (Karachi)
+  mall-road-inn.jpg      <- Mall Road Inn (Murree)
+  old-city-heritage-hotel.jpg      <- Old City Heritage Hotel (Lahore)
+
+
+-- Resorts (12)
+  shangrila-resort.jpg      <- Shangrila Resort (Skardu)
+  serena-shigar-fort.jpg      <- Serena Shigar Fort (Skardu)
+  pearl-continental-bhurban.jpg      <- Pearl Continental Bhurban (Murree)
+  swat-riverside-resort.jpg      <- Swat Riverside Resort (Swat)
+  naran-mountain-resort.jpg      <- Naran Mountain Resort (Naran)
+  hunza-serene-resort.jpg      <- Hunza Serene Resort (Hunza)
+  kaghan-valley-resort.jpg      <- Kaghan Valley Resort (Kaghan)
+  kund-malir-beach-huts.jpg      <- Kund Malir Beach Huts (Balochistan)
+  neelum-riverside-huts.jpg      <- Neelum Riverside Huts (Azad Kashmir)
+  murree-pine-resort.jpg      <- Murree Pine Resort (Murree)
+  skardu-lakeview-huts.jpg      <- Skardu Lakeview Huts (Skardu)
+  gwadar-sea-resort.jpg      <- Gwadar Sea Resort (Gwadar)
+
+-- Transport (12)
+  daewoo-express-bus.jpg      <- Daewoo Express Bus (Nationwide)
+  green-line-train.jpg      <- Green Line Train (Karachi - Islamabad)
+  domestic-flights.jpg      <- Domestic Flights (Major cities)
+  private-car-driver.jpg      <- Private Car & Driver (Nationwide)
+  mountain-jeep-transfer.jpg      <- Mountain Jeep Transfer (Northern Areas)
+  city-ride-hailing.jpg      <- City Ride Hailing (Major cities)
+  group-coaster-van.jpg      <- Group Coaster Van (Nationwide)
+  bike-adventure-rental.jpg      <- Bike Adventure Rental (Nationwide)
+  helicopter-sightseeing.jpg      <- Helicopter Sightseeing (Northern Areas)
+  airport-transfer.jpg      <- Airport Transfer (Major cities)
+  luxury-sedan-hire.jpg      <- Luxury Sedan Hire (Nationwide)
+  tourist-shuttle.jpg      <- Tourist Shuttle (Islamabad - Hunza)
+
+
+### B) wwwroot/images/site/   (decorative photos)
+
+-- Home hero slides (1920x1080, landscape)
+  hunza-mountains.jpg
+  skardu-lake.jpg
+  swat-valley.jpg
+  beach-coast.jpg
+  naran-alpine.jpg
+
+-- Home - section tiles
+  landmark.jpg
+  hotel.jpg
+  transport.jpg
+  holiday.jpg
+
+-- Home / CTA / stats backgrounds (wide)
+  adventure-travel.jpg
+  travelers-hiking.jpg
+
+-- Home - Why Choose Karnel
+  money-savings.jpg
+  tourguide.jpg
+  roadtrip.jpg
+  smartphone-travel.jpg
+
+-- Home - Happy Travellers (real people photos, with permission/licence)
+  woman-portrait.jpg
+  man-portrait.jpg
+  couple-happy.jpg
+
+-- Home + Contact - Photo Gallery
+  mountains.jpg
+  beach.jpg
+  lake.jpg
+  mosque.jpg
+  valley.jpg
+  fort.jpg
+  train.jpg
+  resort.jpg
+  river.jpg
+  sunset.jpg
+  camping.jpg
+  waterfall.jpg
+  desert.jpg
+  snow.jpg
+
+-- About Us
+  travel-tourists.jpg
+  bus-road.jpg
+  tour-group.jpg
+  hotel-room.jpg
+  guide-tourist.jpg
+  customer-support.jpg
+
+-- About - Our Team (4 different people: portrait-professional.jpg, -2, -3, -4)
+  portrait-professional.jpg
+  portrait-professional-2.jpg
+  portrait-professional-3.jpg
+  portrait-professional-4.jpg
+
+-- Contact Us
+  telephone-phone.jpg
+  mailbox-letter.jpg
+  office-building.jpg
+  clock-workspace.jpg
+  karachi-city.jpg
+  lahore-city.jpg
+  islamabad-city.jpg
+  customerservice-smile.jpg
+
+-- Page banners (top of page, wide)
+  travel-friends.jpg
+  travel-guide.jpg
+  phone-customer.jpg
+  ticket-travel.jpg
+  booking-travel.jpg
+
+NOTE: banners of place/package pages use that place's own photo from section A. The site/ banners above are the fallback.
+
+TOTAL: 66 files in places/  +  59 files in site/

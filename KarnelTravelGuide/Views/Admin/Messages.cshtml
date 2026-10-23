@@ -1,0 +1,56 @@
+@model AdminMessagesViewModel
+@{ ViewData["Title"] = "Messages"; }
+<main class="adminmain">
+  <h1>Contact Messages</h1>
+  @if (TempData["Flash"] is string flash) { <div class="okbox">@flash</div> }
+
+  <div class="statgrid">
+    <a class="stat all @(Model.Show == null ? "on" : "")" href="/Admin/Messages"><b>@Model.Total</b><span>All Messages</span></a>
+    <a class="stat pending @(Model.Show == "unread" ? "on" : "")" href="/Admin/Messages?show=unread"><b>@Model.Unread</b><span>Unread</span></a>
+    <a class="stat confirmed @(Model.Show == "inquiry" ? "on" : "")" href="/Admin/Messages?show=inquiry"><b>@Model.Inquiries</b><span>Inquiries</span></a>
+    <a class="stat rejected @(Model.Show == "feedback" ? "on" : "")" href="/Admin/Messages?show=feedback"><b>@Model.Feedbacks</b><span>Feedback</span></a>
+  </div>
+
+  @if (Model.Rows.Count == 0)
+  {
+    <p class="empty admin-empty">@(Model.Total == 0 ? "No messages yet. Inquiries and feedback sent from the Contact page will appear here." : "No messages match this filter.")</p>
+  }
+  else
+  {
+    <div class="tablewrap" style="margin-top:18px">
+      <table class="atable">
+        <thead><tr><th>Received</th><th>From</th><th>Type</th><th>Message</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var m in Model.Rows)
+        {
+          <tr class="@(m.IsRead ? "" : "needs")">
+            <td data-label="Received">@Pk.Stamp(m.CreatedAtUtc)@if (!m.IsRead) { <br /><small><b>New</b></small> }</td>
+            <td data-label="From"><b>@m.Name</b><br /><small>@if (!string.IsNullOrEmpty(m.Phone)) { <a href="tel:@m.Phone">@m.Phone</a><br /> }<a href="mailto:@m.Email">@m.Email</a></small></td>
+            <td data-label="Type"><span class="pill @m.Type.ToLowerInvariant()">@m.Type</span>@if (m.Rating.HasValue) { <br /><small>@(new string('★', m.Rating.Value))@(new string('☆', 5 - m.Rating.Value))</small> }</td>
+            <td class="msgtext" data-label="Message">@m.Text
+              @if (!string.IsNullOrEmpty(m.Destination) || m.TravelDate.HasValue)
+              {
+                <br /><small>@m.Destination@(m.TravelDate.HasValue ? " · " + Pk.Day(m.TravelDate.Value) : "")@(m.People.HasValue ? " · " + m.People + " people" : "")</small>
+              }
+            </td>
+            <td data-label="Actions">
+              <div class="rowbtns">
+                <a class="btn small" href="mailto:@m.Email?subject=@Uri.EscapeDataString("Re: your " + m.Type.ToLowerInvariant() + " - Karnel Travel Guide")">Reply</a>
+                @if (m.IsRead)
+                {
+                  <form method="post" asp-controller="Admin" asp-action="MarkUnread" asp-route-id="@m.Id" asp-route-show="@Model.Show"><button class="btn alt small">Mark Unread</button></form>
+                }
+                else
+                {
+                  <form method="post" asp-controller="Admin" asp-action="MarkRead" asp-route-id="@m.Id" asp-route-show="@Model.Show"><button class="btn alt small markread">Mark Read</button></form>
+                }
+                <form method="post" asp-controller="Admin" asp-action="DeleteMessage" asp-route-id="@m.Id" asp-route-show="@Model.Show" onsubmit="return confirm('Delete this message permanently?')"><button class="btn alt small">Delete</button></form>
+              </div>
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>

@@ -1,0 +1,45 @@
+@model PackageViewModel
+@{
+    Model.Fill(Catalog, Context.Request.Query["name"]);
+    var p = Model.Package ?? new TourPackage("Package Name", "Offer", "landmark", Array.Empty<string>(), Array.Empty<string>(), Array.Empty<string>(), Array.Empty<string>());
+    ViewData["Title"] = p.Name;
+    var banner = new[] { p.Name, "" + p.Offer, p.Kw, Images.PackageBg(p) };
+    var inc = new ViewDataDictionary(ViewData) { { "included", true } };
+}
+<partial name="_Banner" model="banner" />
+<main>
+  <div class="pkgsum">
+    <h2>Everything Is Included in This Package</h2>
+    <p>Your stay, meals and the places you will visit are already part of <b>@p.Name</b>. You do not need to choose a hotel, restaurant or tourist spot separately. Simply book the package.</p>
+    <div class="chips">
+      <a href="#stay">@Model.Stays.Count Hotel / Resort</a><a href="#food">@Model.Restaurants.Count Restaurants</a><a href="#spots">@Model.Spots.Count Tourist Spots</a><a href="#travel">@Model.Travel.Count Transport</a>
+    </div>
+    <div class="btns"><a class="btn" href="/Book?item=@Uri.EscapeDataString(p.Name)">Book Now</a><a class="btn alt" href="/Packages">← All Packages</a></div>
+  </div>
+
+  @if (Model.Stays.Count > 0)
+  {
+    <h2 class="sec" id="stay">Hotel / Resort (Included)</h2>
+    <div class="grid">@foreach (var i in Model.Stays) { <partial name="_Card" model="i" view-data="inc" /> }</div>
+  }
+  @if (Model.Restaurants.Count > 0)
+  {
+    <h2 class="sec" id="food">Restaurants (Included)</h2>
+    <div class="grid">@foreach (var i in Model.Restaurants) { <partial name="_Card" model="i" view-data="inc" /> }</div>
+  }
+  @if (Model.Spots.Count > 0)
+  {
+    <h2 class="sec" id="spots">Tourist Spots (Included)</h2>
+    <div class="grid">@foreach (var i in Model.Spots) { <partial name="_Card" model="i" view-data="inc" /> }</div>
+  }
+  @if (Model.Travel.Count > 0)
+  {
+    <h2 class="sec" id="travel">Transport (Included)</h2>
+    <div class="grid">@foreach (var i in Model.Travel) { <partial name="_Card" model="i" view-data="inc" /> }</div>
+  }
+
+  <div class="pkgsum" style="margin-top:34px;text-align:center">
+    <h2>Ready to go?</h2>
+    <div class="btns" style="justify-content:center"><a class="btn" href="/Book?item=@Uri.EscapeDataString(p.Name)">Book Now: @p.Name</a></div>
+  </div>
+</main>

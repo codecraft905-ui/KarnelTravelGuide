@@ -1,0 +1,18 @@
+@model InformationViewModel
+@{ Model.Fill(Catalog); ViewData["Title"] = "Information"; }
+<partial name="_Banner" model='new[]{"Travel Information","Discover our latest hotels, restaurants, resorts and offers","travel,guide"}' />
+<main>
+  <div class="grid five">
+  @foreach (var t in Nav.Tiles) { <a class="tile" href="@t.Href"><img src="@Images.Img(t.Kw, t.Title.Length * 13, 500, 360)" alt="@t.Title" loading="lazy" /><span>@t.Title</span></a> }
+</div>
+  <h2 class="sec" id="hotels">New Hotels</h2>
+  <div class="grid">@foreach (var i in Model.NewHotels) { <partial name="_Card" model="i" /> }</div>
+  <h2 class="sec" id="restaurants">New Restaurants</h2>
+  <div class="grid">@foreach (var i in Model.NewRestaurants) { <partial name="_Card" model="i" /> }</div>
+  <h2 class="sec" id="resorts">New Resorts</h2>
+  <div class="grid">@foreach (var i in Model.NewResorts) { <partial name="_Card" model="i" /> }</div>
+  <h2 class="sec" id="packages">Packages &amp; Discounts</h2>
+  <div class="grid three">
+    @foreach (var p in Model.Packages) { <partial name="_PackageCard" model="p" /> }
+  </div>
+</main>

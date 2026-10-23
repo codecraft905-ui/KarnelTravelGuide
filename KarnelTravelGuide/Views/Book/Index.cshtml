@@ -1,0 +1,53 @@
+@model BookViewModel
+@{ ViewData["Title"] = "Book a Tour"; }
+<partial name="_Banner" model='new[]{"Book a Tour","Send us your booking request and our team will review and confirm it","booking,travel"}' />
+<main>
+  <div class="contactgrid" id="form">
+    <div class="formcard">
+      @if (Model.Done != null)
+      {
+        <h2>Request Received</h2>
+        <div class="okbox">Thank you, <b>@Model.Done.Name</b>! Your booking request has been sent to our team. We will review it and update the status below. Please save your reference number: <b>@Model.Done.Id</b></div>
+        <partial name="_BookingStatus" model="Model.Done" />
+        <div class="btns"><a class="btn" href="/MyBooking">Track My Booking</a><a class="btn alt" href="/">Back to Home</a></div>
+      }
+      else
+      {
+        <h2>Book Your Package</h2>
+        <p class="meta">Choose a package. Your hotel, restaurants and tourist spots are already included. Once our team accepts your request, your booking is confirmed and appears as <b>Booked</b> under <a href="/MyBooking"><u>My Booking</u></a>.</p>
+        <form method="post" class="form">
+          <label>Package
+            <select asp-for="Destination" id="pkg"><option value="">Select a package</option>
+              @foreach (var p in Catalog.Packages) { <option value="@p.Name" selected="@(Model.Destination == p.Name)">@p.Name - @p.Offer</option> }
+            </select></label>
+          @foreach (var p in Catalog.Packages)
+          {
+            <div class="pkgbox" data-pkg="@p.Name" hidden="@(Model.Destination != p.Name)">
+              <b>Included in @p.Name</b>
+              <p><b>Hotel / Resort:</b> @string.Join(", ", p.Stays)</p>
+              <p><b>Restaurants:</b> @string.Join(", ", p.Restaurants)</p>
+              <p><b>Tourist Spots:</b> @string.Join(", ", p.Spots)</p>
+              <p><b>Transport:</b> @string.Join(", ", p.Travel)</p>
+              <a href="/Packages/Details?name=@Uri.EscapeDataString(p.Name)"><u>See full package details</u></a>
+            </div>
+          }
+          <div class="row2"><label>Full Name<input asp-for="Name" readonly placeholder="Enter your full name" maxlength="100" required /></label><label>Email Address<input asp-for="Email" readonly type="email" placeholder="name@example.com" maxlength="150" required /></label></div>
+          <div class="row2"><label>Phone Number<input asp-for="Phone" type="tel" placeholder="03XX-XXXXXXX" maxlength="30" required /></label>
+            <label>Number of Travelers<input asp-for="People" type="number" min="1" max="100" required /></label></div>
+          <label>Preferred Travel Date<input asp-for="TravelDate" type="date" min="@Model.MinDate" required /></label>
+          <label>Special Requests (optional)<textarea asp-for="Message" rows="4" maxlength="1000" placeholder="Pickup city, room preference, need for a guide, etc."></textarea></label>
+          <div class="hp" aria-hidden="true"><label>Leave this empty<input asp-for="Website" tabindex="-1" autocomplete="off" /></label></div>
+          <div class="err" role="alert" asp-validation-summary="All"></div>
+          <button>Book Now</button>
+        </form>
+      }
+    </div>
+    <div class="side">
+      <div class="listbox"><h3>How It Works</h3>
+        <p>1. Choose a package (stay, meals and places included)</p><p>2. Send your booking request</p><p>3. Our team reviews and confirms your booking</p><p>4. Your booking appears as <b>Booked</b> under My Booking</p>
+        <div class="btns"><a class="btn" href="/MyBooking">My Booking</a><a class="btn alt" href="tel:+923000000000">Call Now</a></div></div>
+      <div class="listbox"><h3>Why Book with Karnel?</h3>
+        <p>Best Price Guarantee</p><p>Verified Hotels, Drivers and Guides</p><p>Free Changes up to 48 Hours Before Travel</p><p>24/7 Phone and WhatsApp Support</p></div>
+    </div>
+  </div>
+</main>

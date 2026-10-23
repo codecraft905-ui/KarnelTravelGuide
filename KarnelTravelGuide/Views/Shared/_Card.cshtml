@@ -1,0 +1,30 @@
+@* ViewData["included"] = true on a package page: the place is part of the package, nothing to choose or book separately *@
+@model Item
+@{
+    var pic = Images.LocalPic(Model);
+    if (pic == null)
+    {
+        var kw = Model.Cat switch { "hotels" => "hotel", "resorts" => "resort", "restaurants" => "restaurant", "travel" => "transport", _ => "landmark" };
+        var alt = Images.Img(kw, Model.Name.Length, 600, 400);
+        if (alt.StartsWith("/")) pic = alt;     // only a real photo; otherwise keep the name placeholder
+    }
+    var included = ViewData["included"] is true;
+    var pk = Catalog.PackagesOf(Model).FirstOrDefault();
+}
+<div class="card">
+  <div class="imgw">
+    @if (pic != null) { <img src="@pic" alt="@Model.Name" loading="lazy" /> }
+    else { <div class="ph"><b>@Model.Name</b></div> }
+    <span class="badge">@Model.Rating</span><span class="cat">@Catalog.Titles[Model.Cat]</span>
+  </div>
+  <div class="cb">
+    <h3>@Model.Name</h3>
+    <p class="meta">@Model.City</p>
+    <p class="desc">@Model.Desc</p>
+    <div class="btns">
+      @if (included) { <span class="inc">Included in this package</span> }
+      else if (pk != null) { <a class="btn" href="/Packages/Details?name=@Uri.EscapeDataString(pk.Name)">View Package</a> }
+      <a class="btn alt" href="/Details?name=@Uri.EscapeDataString(Model.Name)">Details</a>
+    </div>
+  </div>
+</div>
